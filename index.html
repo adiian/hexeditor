@@ -1,0 +1,262 @@
+<html>
+<head>
+        <title>Hex Editor</title>
+ 
+        <script type='text/javascript' src='script.js'></script>
+		<script type='text/javascript' src='hex.js'></script>
+		<script type='text/javascript' src='jquery.min.js'></script>
+		<script type='text/javascript' src='jquery.nouislider.min.js'></script>
+		<link type='text/css' rel='stylesheet' href='nouislider.fox.css'/>
+        <script type='text/javascript'>
+                function functionName(a,b,c){}
+        </script>
+ 
+        <link rel='stylesheet' href='style.css' type='text/css' media='all' />
+        <style type="text/css">
+               
+        </style>
+
+</head>
+ 
+ 
+<body>
+
+
+	<div id="header">
+	
+<div id="drop_zone">Drop files here</div>
+<output id="list"></output>
+
+<script>
+
+var buff;
+var offset = 0;  
+var size = 0;
+var LINES = 20;
+
+var selstart = -1;
+var sellen = -1;
+
+
+  function handleFileSelect(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    var files = evt.dataTransfer.files; // FileList object.
+
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    for (var i = 0, f; f = files[i]; i++) {
+		output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') </li><li> ',
+                  f.size, ' bytes</li><li> last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
+				  
+		size = f.size;
+		
+		var reader = new FileReader();
+		reader.onloadend = function(evt) { buff = evt.target.result; initAll();} 
+		reader.readAsArrayBuffer(f);
+    }
+    document.getElementById('fileinfo').innerHTML = '<ul>' + output.join('') + '</ul>';
+	
+	initScroll();
+  }
+
+  function handleDragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  }
+
+  // Setup the dnd listeners.
+  var dropZone = document.getElementById('drop_zone');
+  dropZone.addEventListener('dragover', handleDragOver, false);
+  dropZone.addEventListener('drop', handleFileSelect, false);
+  
+  function initOffsetCol()
+  {
+	var lines = 20;
+
+	$('#offsetcol').empty();	
+	for (var i = 0; i < 16 * lines; i += 16)
+	{
+		$('#offsetcol').append('<div class="offsetcell" off="00000000">' + zeroFill((offset + i).toString(16),8) + '</div>');
+	}
+  }
+  
+  function initHexCol()
+  {
+	var lines = 20;	
+  
+	var bin = new Uint8Array(buff.slice(offset, offset + lines*16));
+	var limit = bin.byteLength;
+	
+	var pos = 0;
+	$('#hexcol').empty();
+	for (var l = 0; l < lines; l++)
+	{	
+		$('#hexcol').append('<div>');
+		for (var i = 0; i < 16; i++)
+		{
+			if (pos < limit)
+			{
+				var bt = bin[pos];//Math.random(128);
+		
+				$('#hexcol').append('<span class="hexcell" onClick="hexcellSel(this)" pos="' + pos.toString() + '" id="off' + pos.toString(16) + '">' + zeroFill(bt.toString(16),2) + '</span>');
+				
+				pos++;
+				
+				if (i == 7)
+					$('#hexcol').append('&nbsp;');
+			}
+		}
+		$('#hexcol').append('<div>');
+	}
+  }
+  
+  function initAsciiCol()
+  {
+	var lines = 20;	
+  
+	var bin = new Uint8Array(buff.slice(offset, offset + lines*16));
+	var limit = bin.byteLength;
+	
+	var pos = 0;
+	$('#asciicol').empty();
+	for (var l = 0; l < lines; l++)
+	{	
+		var line = '<div>';
+		for (var i = 0; i < 16; i++)
+		{
+			if (pos < limit)
+			{
+				var bt = bin[pos];//Math.floor(Math.random() * 128);
+				var ch = '.';
+				if (bt == 32)
+					ch = '&nbsp;';
+				else if ( bt >= 32 && bt < 127 )
+					ch = String.fromCharCode(bt);
+				
+				line += '<span class="asciicell" id="asc' + pos.toString(16) + '">' + ch + '</span>';
+				
+				pos++;
+			}
+		}
+		line += '</div>';
+		$('#asciicol').append(line);
+	}
+  }  
+  
+	function initAll()
+	{
+		initOffsetCol();
+		initHexCol();
+		initAsciiCol();
+	}
+  
+</script>	
+	
+	</div>
+	
+	<div id="col1">
+		<div id="fileinfo">
+			<label></label>
+			<span id="filename"></span>			
+		</div>	
+		<div id="inspector">
+			<div class="head">Inspector</div>
+		</div>			
+	</div>
+
+	<div id="col2">
+		<div id="offsetcol">
+			
+		</div>
+		<div id="hexcol">
+			
+		</div>		
+		<div id="asciicol">
+			
+		</div>			
+		<div id="scrollcol" width="50px;float:left;">
+			<div id="slider-vertical" style="height: 320px;" class="noUiSlider"></div>
+		</div>
+	</div>
+
+	<div id="col3">
+		<div>
+			<label for="offset">Offset:</label>
+			<input type="text" id="offset" style="border: 0; color: #f6931f; font-weight: bold;" value="0 | 0x0 | 0%"/>
+		</div>
+	</div>	
+ 
+<script>
+//   initOffsetCol();
+ //  initHexCol();
+   //initAsciiCol();
+
+	function initScroll()
+	{
+		$("#slider-vertical").noUiSlider({
+			 range: [0, Math.floor(size / 16) - (LINES - 5)]
+			,start: 0
+			,handles: 1
+			,orientation: "vertical"
+			,slide: function(){
+					offset = 16 * Math.max(0, Math.floor($(this).val()));
+					initOffsetCol();
+					initHexCol();
+					initAsciiCol();
+					
+					$( "#offset" ).val(offset.toString() + ' | 0x' + offset.toString(16) + ' | ' + $(this).val() + '%');			  
+				 
+			}		   
+		});
+	
+/*	
+		$(function() {
+			alert(Math.floor(size / 16) + 1);
+			$( "#slider-vertical" ).slider({
+				orientation: "vertical",
+				min: -1,
+				max: Math.floor(size / 16) + 1,
+				value: 0,
+				slide: function( event, ui ) {
+					offset = 16 * Math.max(0, Math.floor(99 - $( "#slider-vertical" ).slider( "value" )));
+					initOffsetCol();
+					initHexCol();
+					initAsciiCol();
+					
+					$( "#amount" ).val(offset.toString());
+				}
+			});
+		});
+*/		
+	}
+	
+	
+		function hexcellSel(cell)
+		{
+			var lines = 20;
+			
+			if (selstart >= 0)
+			{
+				// deselect
+				var pos = selstart - offset;
+
+				if (pos >= 0 && pos < lines * 16 )
+				{
+					$('#off' + pos.toString(16)).attr('class', 'hexcell');
+				}
+				
+			}
+		
+			selstart = offset + parseInt($(cell).attr('pos'));
+			
+			$(cell).attr('class', 'hexcell-sel');
+		}	
+   
+</script>
+ 
+</body>

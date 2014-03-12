@@ -1,0 +1,126 @@
+
+#header
+{
+	height:80px;
+	background-color:#eee;
+}
+
+#col1
+{
+	width:200px;
+	float:left;
+}
+
+#col2
+{
+	width:620px;
+	float:left;
+}
+
+#col3
+{
+	width:200px;
+	float:left;
+}
+
+#offsetcol
+{
+	float:left;
+	width:60px;
+	font-family:Courier,monospace;
+	font-size:13px;	
+	color:#ccc;
+	cursor: default;
+}
+.offsetcell
+{
+	border-radius: 1px;
+	cursor: default;	
+}
+
+.offsetcell:hover
+{
+	background: #dae4ea;
+}
+
+
+#hexcol
+{
+	float:left;
+	width:330px;
+	margin-left:10px;
+	margin-right:10px;
+	font-family:Courier,monospace;
+	font-size:13px;
+}
+
+.hexcell
+{
+	width:34px;
+	margin-right:2px;
+	margin-left:2px;
+	
+	border-radius: 3px;
+	cursor: default;
+}
+
+.hexcell:hover
+{
+	background-color: #dae4ea;
+}
+
+.hexcell-sel
+{
+	background-color: #ffe4ea;
+	width:34px;
+	margin-right:2px;
+	margin-left:2px;
+	
+	border-radius: 3px;
+	cursor: default;
+}
+
+.hexcell-sel:hover
+{
+	background-color: #ffeeee;
+}
+
+
+#asciicol
+{
+	float:left;
+	width:140px;
+	margin-left:10px;
+	margin-right:10px;
+	font-family:Courier,monospace;
+	font-size:13px;
+}
+
+.asciicell
+{
+	cursor: default;
+}
+
+.asciicell:hover
+{
+	background: #dae4ea;
+}
+
+.asciicell .selected {
+background: #6b9aba;
+color: #fff;
+border-radius: 3px;
+}
+
+#scrollcol
+{
+	width: 50px;
+	float:left;
+}
+
+
+
+
+
+
+
