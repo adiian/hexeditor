@@ -1,262 +1,131 @@
+<!DOCTYPE html>
 <html>
 <head>
-        <title>Hex Editor</title>
- 
-        <script type='text/javascript' src='script.js'></script>
-		<script type='text/javascript' src='hex.js'></script>
-		<script type='text/javascript' src='jquery.min.js'></script>
-		<script type='text/javascript' src='jquery.nouislider.min.js'></script>
-		<link type='text/css' rel='stylesheet' href='nouislider.fox.css'/>
-        <script type='text/javascript'>
-                function functionName(a,b,c){}
-        </script>
- 
-        <link rel='stylesheet' href='style.css' type='text/css' media='all' />
-        <style type="text/css">
-               
-        </style>
-
+    <title>Hex Editor</title>
+    <link type='text/css' rel='stylesheet' href='libs/jquery.nouislider.min.css' />
+    <link rel='stylesheet' href='css/style.css' type='text/css' media='all' />
 </head>
- 
- 
+
 <body>
+    <div id="header">
+        <span id="dropFiles">Drop file here <span class="bold">OR</span>
+            <input type="file" id="files" name="files[]" />
+        </span>
+        
+        <span id="fileinfo"></span>
+        <div class="rightButtonsContainer" style="display: none;">
+            
+            <button onclick="SaveFile();">Export changes</button> &nbsp;
+            <button onclick="Revert();">Revert changes</button>
+        </div>
+    </div>
+    <div id="content" style="display: none;"  >
+        <div id="realContent">
+            <div id="col1">
+                <div class="inspectorCont">
+                    <div class="inspectorTitle">Inspector:</div>
+                    <div class="subContent">
+                        <div class="inspectorSubtitle">View/Edit</div>
+                        <div class="inspectorContent">
+                            <div class="inspectorLabel">Decimal:</div>
+                            <div class="inspectorField">
+                                <input type="number" step="1" min="0" max="255" id="editDecimal" class="decimal" onblur="onDecimalEditChange();"/>
+                            </div>
+                        </div>           
+                        <div class="inspectorContent">
+                            <div class="inspectorLabel">Hexa:</div>
+                            <div class="inspectorField">
+                                <select id="editUpperHexa" dir="rtl" class="upperHexa">
+                                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>                            
+                                    <option value="8">8</option><option value="9">9</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option>
+                                </select>   
+                                <select id="editLowerHexa" class="lowerHexa" >
+                                    <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>                            
+                                    <option value="8">8</option><option value="9">9</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="inspectorContent">
+                           <div class="inspectorLabel">Binary:</div>
+                            <div class="inspectorField">
+                                <input type="radio" id="editBin0" name="editBin0"/><input type="radio" id="editBin1" name="editBin1"/><input type="radio" id="editBin2" name="editBin2"/><input type="radio" id="editBin3" name="editBin3"/><input type="radio" id="editBin4" name="editBin4"/><input type="radio" id="editBin5" /><input type="radio" id="editBin6"/><input type="radio" id="editBin7"/>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="subContent">
+                        <div class="inspectorSubtitle">Search Sequence/s</div>
+                        <div class="inspectorContent">
+                            <div class="inspectorLabel">Type:</div>
+                            <div class="inspectorField">
+                                <select id="searchTextType" onchange="onSearchTypeChange();">
+                                    <option value="Decimal" selected="selected">Decimal</option>
+                                    <option value="Hexa">Hexa</option>
+                                    <option value="Char">Char</option>
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="inspectorContent">
+                            <div class="inspectorLabel"  id="labelSearch">Decimals:</div>
+                            <div class="inspectorField">
+                                <input type="text"  id="searchText" class="char" placeholder="Enter like: this 1 2 44"/>
+                            </div>
+                        </div>           
+                        <div>
+                            <div class="inspectorLabel"><span class="bold">or </span>Address:</div>
+                            <div class="inspectorField">
+                                <input type="text" id="address" class="char" placeholder="Enter like: 000000f0" maxlength="8" />
+                            </div>
+                        </div>
+                        <div class="searchButtonDiv">
+                            <button onclick="Search();">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="col2">
+                <div id="offsetcol">
+                </div>
+                <div id="hexcol" tabIndex="-1">
+                </div>
+                <div id="asciicol">
+                </div>
+                <div id="scrollcol" style="width: 18px; float: left;">
+                    <div id="slider-vertical" style="height: 320px;" class="noUiSlider"></div>
+                </div>
+            </div>
+            <div id="col3">
+                <div class="inspectorCont">
+                    <div class="inspectorTitle">Offset</div>
+                    <div class="subContent">
+                        <div class="offsetContent">
+                            <div class="offsetRow">
+                               <div class="offsetLabel">Decimal:</div> 
+                                <div class="offsetField"><input type="text" id="offsetDecimal"  value="0"  class="offset"  onchange="GoToAddressDecimal();"/></div>
+                            </div> 
+                            <div class="offsetRow">
+                               <div class="offsetLabel">Hexa:</div> 
+                               <div class="offsetField">
+                                   <input type="text" id="offsetHexa"  value="0x0"  class="offset"  onchange="GoToAddressHexa();"/>
+                               </div>
+                            </div>
+                            <div class="offsetRow">
+                               <div  class="offsetLabel">Percent:</div> 
+                               <div class="offsetField">
+                                   <input type="text" id="offsetPercent"  value="0%"  class="offset" onchange="GoToAddressPercent();"/>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-	<div id="header">
-	
-<div id="drop_zone">Drop files here</div>
-<output id="list"></output>
-
-<script>
-
-var buff;
-var offset = 0;  
-var size = 0;
-var LINES = 20;
-
-var selstart = -1;
-var sellen = -1;
-
-
-  function handleFileSelect(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-
-    var files = evt.dataTransfer.files; // FileList object.
-
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-		output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') </li><li> ',
-                  f.size, ' bytes</li><li> last modified: ',
-                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-				  
-		size = f.size;
-		
-		var reader = new FileReader();
-		reader.onloadend = function(evt) { buff = evt.target.result; initAll();} 
-		reader.readAsArrayBuffer(f);
-    }
-    document.getElementById('fileinfo').innerHTML = '<ul>' + output.join('') + '</ul>';
-	
-	initScroll();
-  }
-
-  function handleDragOver(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-  }
-
-  // Setup the dnd listeners.
-  var dropZone = document.getElementById('drop_zone');
-  dropZone.addEventListener('dragover', handleDragOver, false);
-  dropZone.addEventListener('drop', handleFileSelect, false);
-  
-  function initOffsetCol()
-  {
-	var lines = 20;
-
-	$('#offsetcol').empty();	
-	for (var i = 0; i < 16 * lines; i += 16)
-	{
-		$('#offsetcol').append('<div class="offsetcell" off="00000000">' + zeroFill((offset + i).toString(16),8) + '</div>');
-	}
-  }
-  
-  function initHexCol()
-  {
-	var lines = 20;	
-  
-	var bin = new Uint8Array(buff.slice(offset, offset + lines*16));
-	var limit = bin.byteLength;
-	
-	var pos = 0;
-	$('#hexcol').empty();
-	for (var l = 0; l < lines; l++)
-	{	
-		$('#hexcol').append('<div>');
-		for (var i = 0; i < 16; i++)
-		{
-			if (pos < limit)
-			{
-				var bt = bin[pos];//Math.random(128);
-		
-				$('#hexcol').append('<span class="hexcell" onClick="hexcellSel(this)" pos="' + pos.toString() + '" id="off' + pos.toString(16) + '">' + zeroFill(bt.toString(16),2) + '</span>');
-				
-				pos++;
-				
-				if (i == 7)
-					$('#hexcol').append('&nbsp;');
-			}
-		}
-		$('#hexcol').append('<div>');
-	}
-  }
-  
-  function initAsciiCol()
-  {
-	var lines = 20;	
-  
-	var bin = new Uint8Array(buff.slice(offset, offset + lines*16));
-	var limit = bin.byteLength;
-	
-	var pos = 0;
-	$('#asciicol').empty();
-	for (var l = 0; l < lines; l++)
-	{	
-		var line = '<div>';
-		for (var i = 0; i < 16; i++)
-		{
-			if (pos < limit)
-			{
-				var bt = bin[pos];//Math.floor(Math.random() * 128);
-				var ch = '.';
-				if (bt == 32)
-					ch = '&nbsp;';
-				else if ( bt >= 32 && bt < 127 )
-					ch = String.fromCharCode(bt);
-				
-				line += '<span class="asciicell" id="asc' + pos.toString(16) + '">' + ch + '</span>';
-				
-				pos++;
-			}
-		}
-		line += '</div>';
-		$('#asciicol').append(line);
-	}
-  }  
-  
-	function initAll()
-	{
-		initOffsetCol();
-		initHexCol();
-		initAsciiCol();
-	}
-  
-</script>	
-	
-	</div>
-	
-	<div id="col1">
-		<div id="fileinfo">
-			<label></label>
-			<span id="filename"></span>			
-		</div>	
-		<div id="inspector">
-			<div class="head">Inspector</div>
-		</div>			
-	</div>
-
-	<div id="col2">
-		<div id="offsetcol">
-			
-		</div>
-		<div id="hexcol">
-			
-		</div>		
-		<div id="asciicol">
-			
-		</div>			
-		<div id="scrollcol" width="50px;float:left;">
-			<div id="slider-vertical" style="height: 320px;" class="noUiSlider"></div>
-		</div>
-	</div>
-
-	<div id="col3">
-		<div>
-			<label for="offset">Offset:</label>
-			<input type="text" id="offset" style="border: 0; color: #f6931f; font-weight: bold;" value="0 | 0x0 | 0%"/>
-		</div>
-	</div>	
- 
-<script>
-//   initOffsetCol();
- //  initHexCol();
-   //initAsciiCol();
-
-	function initScroll()
-	{
-		$("#slider-vertical").noUiSlider({
-			 range: [0, Math.floor(size / 16) - (LINES - 5)]
-			,start: 0
-			,handles: 1
-			,orientation: "vertical"
-			,slide: function(){
-					offset = 16 * Math.max(0, Math.floor($(this).val()));
-					initOffsetCol();
-					initHexCol();
-					initAsciiCol();
-					
-					$( "#offset" ).val(offset.toString() + ' | 0x' + offset.toString(16) + ' | ' + $(this).val() + '%');			  
-				 
-			}		   
-		});
-	
-/*	
-		$(function() {
-			alert(Math.floor(size / 16) + 1);
-			$( "#slider-vertical" ).slider({
-				orientation: "vertical",
-				min: -1,
-				max: Math.floor(size / 16) + 1,
-				value: 0,
-				slide: function( event, ui ) {
-					offset = 16 * Math.max(0, Math.floor(99 - $( "#slider-vertical" ).slider( "value" )));
-					initOffsetCol();
-					initHexCol();
-					initAsciiCol();
-					
-					$( "#amount" ).val(offset.toString());
-				}
-			});
-		});
-*/		
-	}
-	
-	
-		function hexcellSel(cell)
-		{
-			var lines = 20;
-			
-			if (selstart >= 0)
-			{
-				// deselect
-				var pos = selstart - offset;
-
-				if (pos >= 0 && pos < lines * 16 )
-				{
-					$('#off' + pos.toString(16)).attr('class', 'hexcell');
-				}
-				
-			}
-		
-			selstart = offset + parseInt($(cell).attr('pos'));
-			
-			$(cell).attr('class', 'hexcell-sel');
-		}	
-   
-</script>
- 
+    <script type='text/javascript' src='libs/jquery.min.js'></script>
+    <script type='text/javascript' src='libs/jquery.nouislider.min.js'></script>
+    <script type='text/javascript' src='js/script.js'></script>
+    <script type='text/javascript' src='js/hex.js'></script>
 </body>
+</html>

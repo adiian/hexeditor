@@ -1,0 +1,387 @@
+body,html {
+    height: 98%;
+    margin:0;
+}
+
+#header
+{
+	height:100%;
+	background-color:#eee;
+    padding-top: 3px;
+    text-align: center;
+}
+
+#content {
+    clear: both;
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-top: 20px;
+    background-color:#eee;
+    height: 85%;    
+}
+
+#realContent {
+    margin: auto;
+    width: 1200px;
+    overflow: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#dropFiles {
+    color: gray;
+}
+
+
+#col1
+{
+	float:left;
+}
+
+#col2
+{
+	width:630px;
+	float:left;
+    padding-top : 10px;
+    padding-bottom: 10px;
+}
+
+#col3
+{
+	float:left;
+}
+
+#offsetcol
+{
+	float:left;
+	width:65px;
+	font-family:Courier,monospace;
+	font-size:13px;	
+	color:#ccc;
+	cursor: default;
+}
+.offsetcell
+{
+	border-radius: 1px;
+	cursor: default;	
+}
+
+.offsetcell:hover
+{
+	background: #dae4ea;
+}
+
+
+#hexcol
+{
+	float:left;
+	width:350px;
+	margin-left:10px;
+	margin-right:10px;
+	font-family:Courier,monospace;
+	font-size:13px;
+    /*outline: none;*/
+}
+
+.hexcell
+{
+	width:34px;
+	margin-right:2px;
+	margin-left:2px;
+	border-radius: 3px;
+	cursor: default;
+    border: 1px solid #eee;
+}
+
+.hexcell:hover
+{
+	background-color: #dae4ea;
+}
+
+.hexcell-sel
+{
+	background-color: #ffe4ea !important;
+	width:34px !important;
+	margin-right:2px !important;
+	margin-left:2px !important;
+	border-radius: 3px !important;
+	cursor: default !important;
+}
+
+.hexcell-sel:hover
+{
+	background-color: #ffeeee;
+}
+
+.hexcell-modified {
+    background-color: silver;
+    color: white;
+	width:34px;
+	margin-right:2px;
+	margin-left:2px;
+	border-radius: 3px;
+	cursor: default;
+}
+
+.hexcell-search {
+    
+	width:34px;
+	margin-right:2px;
+	margin-left:2px;
+	border-radius: 3px;
+	cursor: default;
+    border: 1px solid green;
+}
+
+
+
+#asciicol
+{
+	float:left;
+	width:140px;
+	margin-left:10px;
+	margin-right:10px;
+	font-family:Courier,monospace;
+	font-size:13px;
+}
+
+.asciicell
+{
+	cursor: default;
+}
+
+.asciicell:hover
+{
+	background: #dae4ea;
+}
+
+.selected {
+background: #6b9aba ! important;
+color: #fff !important;
+border-radius: 3px !important;
+
+}
+
+#scrollcol
+{
+	width: 50px;
+	float:left;
+}
+
+ul {
+    margin-top: 0px;
+}
+
+
+.offset {
+    background-color: #eee;
+    border: 0; 
+    color: #f6931f; 
+    font-weight: bold;
+    text-align: right;
+}
+
+.offsetContent {
+    height: 80px;
+    overflow: hidden;
+    padding-left: 5px;
+}
+
+.offsetContent input[type="text"]{
+    width: 100px;
+}
+
+.offSetRow {
+    clear: both;
+}
+
+.offsetLabel {
+    width: 60px;
+    float: left;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.offsetField {
+    float: left;
+}
+
+
+
+
+
+
+
+
+.inspectorCont {
+    background: #d9d7cb;
+    margin-left: 5px;
+    margin-right: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.inspectorLabel {
+    float: left;
+    width: 80px;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.inspectorField {
+    float: left;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.inspectorField input[type=number] {
+    background-color: darkgray;
+}
+
+.inspectorContent {
+    clear: both;
+    padding-bottom: 10px;
+}
+
+.inspectorTitle {
+    font-weight:bold;
+}
+
+.decimal {
+    width: 140px;
+}
+
+input[type="radio"] {
+    margin-left: 0px;
+    margin-right: 1px;
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+}
+
+.lowerHexa {
+    width: 70px;
+}
+
+.upperHexa {
+    width: 70px;
+    text-align: right;
+}
+
+.inspectorSubtitle {
+    font-weight: bold;
+}
+
+.char {
+    width: 140px;
+    text-align: right;
+}
+
+button {
+    border: 2px solid gray;
+    background-color: silver;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 15px;
+    min-width: 120px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.searchButtonDiv {
+    width: 100%;
+    text-align: right;
+    padding-top: 23px;
+}
+
+
+.searchButtonDiv button {
+     min-width: 60px;
+}
+
+.subContent {
+    margin-top: 18px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.rightButtonsContainer {
+    float: right;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+}
+
+
+@media (min-width:760px) and (max-width:1024px) {
+
+    #header {
+        min-height: 60px;
+    }
+
+    #content {
+        margin-top: 20px;
+        height: auto;
+    }
+
+    #realContent {
+        margin: auto;
+        width: 730px;
+        padding-bottom: 10px;
+        padding-top: 0px;
+    }
+
+    #col1
+    {
+	    float: none;
+        width: 650px;
+    }
+
+    #col2
+    {
+	    float:none;
+        clear: both;
+        overflow: hidden;
+        
+    }
+
+    #col3
+    {	    
+	    float: none;
+        clear: both;
+        padding-top: 10px;
+        width: 650px;
+    }
+
+    .subContent {
+        float: left;
+        margin-top: 0px;
+        margin-left: 20px;
+    }
+
+    .inspectorCont {
+        overflow: hidden;
+    }
+
+    .inspectorTitle {
+        float: left;
+    }
+
+   
+    .offsetContent div{
+        float: left;
+    }
+
+    .offsetContent {
+        height: 25px;
+    }
+
+}
+
+ 
+
